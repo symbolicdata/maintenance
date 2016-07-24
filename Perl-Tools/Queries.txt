@@ -1,0 +1,43 @@
+Are the 
+    ical:contact sd:Person
+    sd:hasGeneralChair sd:Person
+    sd:hasOrganizers sd:Person
+    sd:hasProgramChair sd:Person
+    sd:hasProgramCommittee sd:Person
+    sd:invitedSpeakers sd:Person 
+values in SD/People?
+
+PREFIX ical: <http://www.w3.org/2002/12/cal/ical#>
+PREFIX sd: <http://symbolicdata.org/Data/Model#>
+select ?a ?c 
+from <http://symbolicdata.org/Data/PastConferences/>
+from <http://symbolicdata.org/Data/People/>
+where {
+?a a sd:Conference; ?b ?c .
+optional { ?c foaf:name ?n . }
+filter regex(?c, "symbolicdata.org/Data/Person")
+filter (!bound(?n))
+}
+
+-------------------------------------------------------
+Which past conferences have sd:hasCARReport entries?
+
+PREFIX sd: <http://symbolicdata.org/Data/Model#>
+select ?a ?b
+from <http://symbolicdata.org/Data/PastConferences/>
+where {
+?a a sd:Conference; sd:hasCARReport ?b .
+} order by desc(?b)
+
+-------------------------------------------------------
+Do the sd:Annotation sd:relatesTo values exist?
+
+PREFIX sd: <http://symbolicdata.org/Data/Model#>
+select 
+distinct ?p ?c ?t
+where {
+?p a sd:Annotation; sd:relatesTo ?c .
+optional { ?c a ?t . }
+filter (!bound(?t))
+}
+order by ?p
